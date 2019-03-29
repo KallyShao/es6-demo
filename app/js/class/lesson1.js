@@ -29,3 +29,19 @@
     // let [a, , , b] = f();
     let [a, ...b] = f(); // 或者这样使用
 }
+
+{
+    let { a = 3, b = 2 } = { a: 22 }; //前面括号内是给变量先赋默认值
+    console.log(a, b);
+}
+
+{
+    let res = {
+        title: 'abc',
+        data: [{
+            title: 'item1'
+        }]
+    };
+    let { title: t1, data: [{ title: t2}]} = res;
+    console.log(t1, t2);
+}

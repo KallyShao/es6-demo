@@ -115,5 +115,31 @@
 
 	}
 
+	{
+	    var _a4 = { a: 22 },
+	        _a4$a = _a4.a,
+	        _a3 = _a4$a === undefined ? 3 : _a4$a,
+	        _a4$b = _a4.b,
+	        _b3 = _a4$b === undefined ? 2 : _a4$b; //前面括号内是给变量先赋默认值
+
+
+	    console.log(_a3, _b3);
+	}
+
+	{
+	    var _res = {
+	        title: 'abc',
+	        data: [{
+	            title: 'item1'
+	        }]
+	    };
+
+	    var t1 = _res.title,
+	        _res$data = _slicedToArray(_res.data, 1),
+	        t2 = _res$data[0].title;
+
+	    console.log(t1, t2);
+	}
+
 /***/ })
 /******/ ]);
