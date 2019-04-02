@@ -1,4 +1,4 @@
 import 'babel-polyfill';
-import './class/lesson6(set-map)';
+import './class/lesson8(promise)';
 
 

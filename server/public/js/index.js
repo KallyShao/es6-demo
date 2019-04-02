@@ -9619,117 +9619,55 @@
 
 	'use strict';
 
-	// set数据结构，属于数组的补充, set中的元素不能重复，添加重复元素不会报错，也不会生效
 	{
-	    var list = new Set();
-	    list.add(5);
-	    list.add(9);
-	    console.log(list.size);
-	    console.log(list);
+	    // es5使用回调解决异步问题
+	    // let ajax = function(cb) {
+	    //     console.log('执行');
+	    //     setTimeout(function(){
+	    //         cb && cb.call();
+	    //     }, 1000)
+	    // };
+	    // ajax函数运行完之后执行回调
+	    // ajax(function(){
+	    //     console.log('timeout1');
+	    // });
 	}
-
 	{
-	    var arr = [1, 1, 9];
-	    var _list = new Set(arr); // 对set做初始化
-	}
-
-	{
-	    //使用set去重（只会去除严格意义重复的数据）
-	    var _arr = [1, 1, 2, 2, 2, 33];
-	    var _list2 = new Set(_arr);
-	    console.log(_list2);
-	}
-
-	// 其他方法，clear(), delete(), has()
-
-	{
-	    // 遍历
-	    var _arr2 = [1, 1, 2, 2, 2, 33];
-	    var _list3 = new Set(_arr2);
-	    var _iteratorNormalCompletion = true;
-	    var _didIteratorError = false;
-	    var _iteratorError = undefined;
-
-	    try {
-	        for (var _iterator = _list3.keys()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	            var key = _step.value;
-
-	            console.log(key);
-	        }
-	    } catch (err) {
-	        _didIteratorError = true;
-	        _iteratorError = err;
-	    } finally {
-	        try {
-	            if (!_iteratorNormalCompletion && _iterator.return) {
-	                _iterator.return();
+	    // promise: 解决异步操作问题
+	    var ajax = function ajax(num) {
+	        console.log('执行2');
+	        return new Promise(function (resolve, reject) {
+	            if (num > 5) {
+	                resolve();
+	            } else {
+	                reject();
+	                throw new Error('出错了');
 	            }
-	        } finally {
-	            if (_didIteratorError) {
-	                throw _iteratorError;
-	            }
-	        }
-	    }
-	}
+	        });
+	    };
 
-	/////////////////weakset, weakset的元素只能是对象；
-	{
-	    var weakList = new WeakSet();
-	    var obj = {};
-	    weakList.add(obj);
-	    weakList.add(obj);
-	    console.log(weakList);
-	}
-	/////////////////map数据结构
-	{
-	    var map = new Map();
-	    var _arr3 = ['122'];
-	    map.set(_arr3, 129);
-	    console.log(map);
-	    console.log(map.get(_arr3));
-	}
-	{
-	    var _map = new Map([['a', 12], ['b', 34]]);
-	    console.log(_map.size);
-	}
-	////////////////////weakMap数据结构, key值必须是对象
-	{
-	    var weakmap = new WeakMap();
-	    var o = {};
-	    weakmap.set(o, 123);
-	    console.log(weakmap);
-	}
-	////////////////////////////////////////与数组，对象的对比（增，删，改，查）
-	{
-	    //增
-	    var _map2 = new Map();
-	    var _arr4 = [];
-	    var set = new Set();
-	    _map2.set('t', 1);
-	    _map2.set('b', 2);
-	    _arr4.push({ t: 1 });
-	    set.add({ t: 1 });
-	    console.log(_map2);
-	    console.log(set);
-	    //查
-	    _map2.has('t');
-	    _arr4.find(function (item) {
-	        return item.t;
+	    // ajax(1)
+	    // .then(function(res){
+	    //     // 执行resolve
+	    //     console.log('执行成功');
+	    // }, function(){
+	    //     // 执行reject
+	    //     console.log('reject');
+	    // })
+	    // .catch(function(){
+	    //     // 捕获前面执行过程中的异常
+	    // });
+	    ajax(1).then(function (res) {
+	        // 执行resolve
+	        console.log('执行成功');
+	    }).catch(function () {
+	        // 捕获前面执行过程中的异常
+	        console.log('catch error');
 	    });
-	    //改
-	    _map2.set('t', 3);
-	    _arr4.forEach(function (item) {
-	        if (item.t) {
-	            item.t = 4;
-	        }
-	    });
-	    //删
-	    _map2.delete('t');
-	    var idx = _arr4.findIndex(function (item) {
-	        return item.t;
-	    });
-	    _arr4.splice(idx, 1);
-	    console.log(_arr4);
+	}
+	{
+	    // 多步操作
+
 	}
 
 /***/ })

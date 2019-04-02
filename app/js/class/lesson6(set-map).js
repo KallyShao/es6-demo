@@ -85,3 +85,6 @@
     arr.splice(idx, 1);
     console.log(arr);
 }
+{
+    // 建议：如果是比较复杂的数据结构，能使用map时就不使用array；如果考虑对数据结构存储的唯一性，考虑使用set。
+}
