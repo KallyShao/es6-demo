@@ -9619,55 +9619,115 @@
 
 	'use strict';
 
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 	{
-	    // es5使用回调解决异步问题
-	    // let ajax = function(cb) {
-	    //     console.log('执行');
-	    //     setTimeout(function(){
-	    //         cb && cb.call();
-	    //     }, 1000)
-	    // };
-	    // ajax函数运行完之后执行回调
-	    // ajax(function(){
-	    //     console.log('timeout1');
-	    // });
-	}
-	{
-	    // promise: 解决异步操作问题
-	    var ajax = function ajax(num) {
-	        console.log('执行2');
-	        return new Promise(function (resolve, reject) {
-	            if (num > 5) {
-	                resolve();
+	    var obj = {
+	        time: '2019-04-02',
+	        name: 'net',
+	        _r: 123
+	    };
+	    // monitor是一个中间对象，最后用户读取的是monitor对象，原始对象obj对用户来说是不可见的
+	    var monitor = new Proxy(obj, {
+	        //  拦截对象属性的读取
+	        get: function get(target, key) {
+	            return target[key].replace('2019', '2018');
+	        },
+
+	        // 被拦截对象属性的设置
+	        set: function set(target, key, val) {
+	            if (key === 'name') {
+	                return target[key] = val;
 	            } else {
-	                reject();
-	                throw new Error('出错了');
+	                return target[key];
+	            }
+	        },
+
+	        // 拦截对象key in obj操作
+	        has: function has(target, key) {
+	            if (key === 'name') {
+	                return target[key];
+	            } else {
+	                return false;
+	            }
+	        },
+
+	        // 拦截删除
+	        deleteProperty: function deleteProperty(target, key) {
+	            if (key.indexOf('_') > -1) {
+	                delete target[key];
+	                return true;
+	            } else {
+	                return target[key];
+	            }
+	        },
+
+	        // 拦截Object.keys, Object.getOwnPropertSymbols....
+	        ownKeys: function ownKeys(target) {
+	            return Object.keys(target).filter(function (item) {
+	                return item != 'time';
+	            });
+	        }
+	    });
+	    // monitor.name = '2000';
+	    // console.log(monitor);
+	    // console.log('time' in monitor);  //false
+	    // console.log('name' in monitor); //true
+	    // delete monitor.time;
+	    // delete monitor._r;
+	    // console.log(monitor);
+	    console.log(Object.keys(monitor)); //[name, _r]，time被过滤掉了
+	}
+	//////////////////Reflect：用法和proxy一样
+	{
+	    var _obj = {
+	        time: '2019-04-02',
+	        name: 'net',
+	        _r: 123
+	    };
+	    console.log(Reflect.get(_obj, 'time'));
+	    console.log(Reflect.has(_obj, 'name'));
+	}
+	///////////////////////////应用：和业务解耦的校验模块
+	{
+	    var validator = function validator(target, _validator) {
+	        return new Proxy(target, {
+	            _validator: _validator, //保存配置选项？
+	            set: function set(target, key, value, proxy) {
+	                if (target.hasOwnProperty(key)) {
+	                    var val = this._validator[key];
+	                    if (!!val(value)) {
+	                        return Reflect.set(target, key, vallue, proxy);
+	                    } else {
+	                        throw Error('\u4E0D\u80FD\u8BBE\u7F6E' + key + '\u5230' + value);
+	                    }
+	                } else {
+	                    throw Error(key + '\u4E0D\u5B58\u5728');
+	                }
 	            }
 	        });
 	    };
 
-	    // ajax(1)
-	    // .then(function(res){
-	    //     // 执行resolve
-	    //     console.log('执行成功');
-	    // }, function(){
-	    //     // 执行reject
-	    //     console.log('reject');
-	    // })
-	    // .catch(function(){
-	    //     // 捕获前面执行过程中的异常
-	    // });
-	    ajax(1).then(function (res) {
-	        // 执行resolve
-	        console.log('执行成功');
-	    }).catch(function () {
-	        // 捕获前面执行过程中的异常
-	        console.log('catch error');
-	    });
-	}
-	{
-	    // 多步操作
+	    var personValidators = {
+	        name: function name(val) {
+	            return typeof val === 'string';
+	        },
+	        age: function age(val) {
+	            return typeof val === 'number' && val > 18;
+	        }
+	    };
 
+	    var Person = function Person(name, age) {
+	        _classCallCheck(this, Person);
+
+	        this.name = name;
+	        this.age = age;
+	        return validator(this, personValidators);
+	    };
+
+	    var person = new Person('lilei', 30);
+	    console.log(person);
+	    person.name = 90;
 	}
 
 /***/ })

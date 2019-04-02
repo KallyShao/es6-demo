@@ -20,7 +20,7 @@
                 resolve();
             } else {
                 reject();
-                throw new Error('出错了');
+                throw Error('出错了');
             }
         });
     };
@@ -47,6 +47,56 @@
     });
 }
 {
-    // 多步操作
+    // 所有图片加载完再添加到页面
+    function loadImg(src){
+        return new Promise((resolve, reject) => {
+            let img = document.createElement('img');
+            img.src = src;
+            img.onload = function(){
+                resolve(img);
+            };
+            img.onerror = function(){
+                reject(err);
+            }
+        });
+    }
+    function showImgs(imgs) {
+        imgs.forEach(img => {
+            document.body.appendChild(img);
+        });
+    }
+    // 当3张图片都加载完成后，才会执行then中的显示图片
+    // Promise.all([
+    //     loadImg('http://iph.href.lu/300x200?text=300x200'),
+    //     loadImg('http://iph.href.lu/200x200?text=300x200'),
+    //     loadImg('http://iph.href.lu/200x400?text=300x200')
+    // ]).then(showImgs);
+
+}
+
+{
+    // 显示先加载完成的那张图片
+    function loadImg(src){
+        return new Promise((resolve, reject) => {
+            let img = document.createElement('img');
+            img.src = src;
+            img.onload = function(){
+                resolve(img);
+            };
+            img.onerror = function(){
+                reject(err);
+            }
+        });
+    }
+    function showImgs(img) {
+        let p = document.createElement('p');
+        p.appendChild(img);
+        document.body.appendChild(p);
+    };
+    Promise.race([
+        loadImg('http://iph.href.lu/300x200?text=300x200'),
+        loadImg('http://iph.href.lu/200x200?text=300x200'),
+        loadImg('http://iph.href.lu/200x400?text=300x200')
+    ]).then(showImgs);
 
 }

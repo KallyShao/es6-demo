@@ -1,4 +1,4 @@
 import 'babel-polyfill';
-import './class/lesson8(promise)';
+import './class/lesson9(proxy)';
 
 
